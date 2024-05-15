@@ -2,23 +2,23 @@ import feedback from "../images/icons/feedback.png";
 import { toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { createFavourtieApi, getActivatedVehiclesApi } from "../apis/Api";
+import { createFavourtieApi, getServiceProvidersApi } from "../apis/Api";
 import favIcon from "../images/icons/fav.png";
 import favIconActive from "../images/icons/added.png";
 import Example from "../components/Navbar";
 
 const Services = () => {
-  const [vehicles, setVehicles] = useState([]);
+  const [providers, setProviders] = useState([]);
   const [activeIcons, setActiveIcons] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredVehicles, setFilteredVehicles] = useState([]);
-  console.log(vehicles);
+  const [filteredProviders, setFilteredProviders] = useState([]);
+
   useEffect(() => {
-    getActivatedVehiclesApi().then((res) => {
-      setVehicles(res.data.vehicles);
+    getServiceProvidersApi().then((res) => {
+      setProviders(res.data.providers);
 
       const initialActiveIcons = {};
-      res.data.vehicles.forEach((item) => {
+      res.data.providers.forEach((item) => {
         initialActiveIcons[item._id] = false;
       });
       setActiveIcons(initialActiveIcons);
@@ -26,11 +26,11 @@ const Services = () => {
   }, []);
 
   useEffect(() => {
-    const filtered = vehicles.filter((item) =>
-      item.vehicleName.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = providers.filter((item) =>
+      item.firstName.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    setFilteredVehicles(filtered);
-  }, [searchQuery, vehicles]);
+    setFilteredProviders(filtered);
+  }, [searchQuery, providers]);
 
   const toggleIcon = (id) => {
     setActiveIcons((prevIcons) => ({
@@ -39,7 +39,7 @@ const Services = () => {
     }));
   };
 
-  const handleAdd = (e, vehicleId) => {
+  const handleAdd = (e, providerId) => {
     e.preventDefault();
 
     const storedUserData = localStorage.getItem("user");
@@ -50,7 +50,7 @@ const Services = () => {
 
       const data = {
         userId: userId,
-        vehicleId: vehicleId,
+        providerId: providerId,
       };
 
       createFavourtieApi(data)
@@ -84,7 +84,7 @@ const Services = () => {
           />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {filteredVehicles.map((item) => (
+          {filteredProviders.map((item) => (
             <div
               key={item._id}
               className="relative bg-white border shadow-md rounded-md p-4 transition-all duration-300"
@@ -93,10 +93,9 @@ const Services = () => {
                 to={`/user/view/${item._id}`}
                 className="text-lg font-semibold block hover:text-blue-500"
               >
-                {item.vehicleName || ""}
+                Name: {item.firstName || ""}
               </Link>
-              <p className="text-gray-600">{`From: ${item.from || ""}`}</p>
-              <p className="text-gray-600">{`To: ${item.to || ""}`}</p>
+              <p className="text-gray-600">Service: {item.service || ""}</p>
               <div className="flex justify-end">
                 <button
                   className="text-white p-2 rounded-full bg-blue-500 mr-2"

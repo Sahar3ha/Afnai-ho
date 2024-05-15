@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { createUserApi } from '../apis/Api';
+import { createProviderApi } from '../apis/Api';
 import registerImg from '../images/Register.jpg';
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 
-const Register = () => {
+const ServiceProvider = () => {
   const [firstname, setFirstName] = useState('');
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [service, setService] = useState('');
   const navigate = useNavigate();
 
   const changeFirstname = (e) => {
@@ -27,6 +28,10 @@ const Register = () => {
     setPassword(e.target.value);
   }
 
+  const changeService = (e) => {
+    setService(e.target.value);
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -34,10 +39,11 @@ const Register = () => {
       firstName: firstname,
       lastName: lastname,
       email: email,
-      password: password
+      password: password,
+      service: service
     }
 
-    createUserApi(data)
+    createProviderApi(data)
       .then((res) => {
         if (res.data.success === false) {
           toast.error(res.data.message);
@@ -65,14 +71,19 @@ const Register = () => {
           <input onChange={changeEmail} className="w-full rounded-lg bg-gray-100 mt-2 p-2 focus:outline-none" type="email" id="email" placeholder="Enter your email" />
           <label htmlFor="password" className="block text-gray-700 mt-4">Password</label>
           <input onChange={changePassword} className="w-full rounded-lg bg-gray-100 mt-2 p-2 focus:outline-none" type="password" id="password" placeholder="Enter your password" />
+          <label htmlFor="service" className="block text-gray-700 mt-4">Service</label>
+          <select onChange={changeService} className="w-full rounded-lg bg-gray-100 mt-2 p-2 focus:outline-none" id="service">
+            <option value="">Select Service</option>
+            <option value="plumber">Plumber</option>
+            <option value="electrician">Electrician</option>
+            <option value="cleaner">Cleaner</option>
+          </select>
           <button onClick={handleSubmit} className="w-full mt-6 bg-teal-500 text-white font-bold py-2 rounded-lg shadow-lg hover:bg-teal-600 transition duration-300">Sign Up</button>
           <p className="mt-4 text-center">Already have an account? <a href="/login" className="text-blue-500 underline">Sign in here</a></p>
-          <p className="mt-4 text-center">Register as a service provider <a href="/provider" className="text-blue-500 underline">Sign in here</a></p>
-
         </form>
       </div>
     </div>
   );
 }
 
-export default Register;
+export default ServiceProvider;

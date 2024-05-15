@@ -16,8 +16,12 @@ const config = {
 export const createUserApi = (data) => Api.post('/api/users/register',data)
 export const loginUserApi = (data) => Api.post('/api/users/login',data)
 
+
+export const createProviderApi = (data) => Api.post('/api/provider/register',data)
+
 export const getNotification = (data)=> Api.get('/api/admin/get_notification',data)
 
 export const createFavourtieApi = (data) => Api.post('/api/users/create_favourite',data)
 
-export const getActivatedVehiclesApi = (data)=> Api.get('/api/admin/getActivatedVehicles',data)
+export const getActivatedVehiclesApi = (data)=> Api.get('/api/admin/getActiveServices',data)
+export const getServiceProvidersApi = (data)=> Api.get('/api/provider/get_providers',data)

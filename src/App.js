@@ -4,11 +4,14 @@ import {
    Route, 
    Routes
    } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import Services from './pages/Services';
+import ServiceProvider from './pages/Register Admin';
 
 function App() {
   return (
@@ -18,6 +21,7 @@ function App() {
         <Route path='/home' element={<Home/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/services' element={<Services/>}/>
+        <Route path='/provider' element={<ServiceProvider/>}/>
 
 
         <Route path='/register' element={<Register/>}/>
