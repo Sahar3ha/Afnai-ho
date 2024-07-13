@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createProviderApi } from '../apis/Api';
+import { createProviderApi, createUserApi } from '../apis/Api';
 import registerImg from '../images/Register.jpg';
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
@@ -43,7 +43,7 @@ const ServiceProvider = () => {
       service: service
     }
 
-    createProviderApi(data)
+    createUserApi(data)
       .then((res) => {
         if (res.data.success === false) {
           toast.error(res.data.message);

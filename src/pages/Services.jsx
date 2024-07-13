@@ -2,10 +2,10 @@ import feedback from "../images/icons/feedback.png";
 import { toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { createFavourtieApi, getServiceProvidersApi } from "../apis/Api";
+import { createFavourtieApi, createRequestApi, getServiceProvidersApi } from "../apis/Api";
 import favIcon from "../images/icons/fav.png";
 import favIconActive from "../images/icons/added.png";
-import Example from "../components/Navbar";
+import Navbar from "../components/Navbar";
 
 const Services = () => {
   const [providers, setProviders] = useState([]);
@@ -41,25 +41,40 @@ const Services = () => {
 
   const handleAdd = (e, providerId) => {
     e.preventDefault();
-
     const storedUserData = localStorage.getItem("user");
 
     if (storedUserData) {
       const parsedUserData = JSON.parse(storedUserData);
       const userId = parsedUserData._id;
 
-      const data = {
-        userId: userId,
-        providerId: providerId,
-      };
+      const data = { userId: userId, providerId: providerId };
 
       createFavourtieApi(data)
         .then((res) => {
-          if (res.data.success === false) {
-            toast.error(res.data.message);
-          } else {
-            toast.success(res.data.message);
-          }
+          res.data.success ? toast.success(res.data.message) : toast.error(res.data.message);
+        })
+        .catch((err) => {
+          toast.error("Server error");
+          console.log(err.message);
+        });
+    } else {
+      console.log("User data not found in localStorage");
+    }
+  };
+
+  const handleRequest = (e, providerId) => {
+    e.preventDefault();
+    const storedUserData = localStorage.getItem("user");
+
+    if (storedUserData) {
+      const parsedUserData = JSON.parse(storedUserData);
+      const userId = parsedUserData._id;
+
+      const data = { userId: userId, providerId: providerId };
+
+      createRequestApi(data)
+        .then((res) => {
+          res.data.success ? toast.success(res.data.message) : toast.error(res.data.message);
         })
         .catch((err) => {
           toast.error("Server error");
@@ -72,33 +87,28 @@ const Services = () => {
 
   return (
     <>
-      <Example />
-      <div className="container mx-auto my-8">
+      <Navbar />
+      <div className="container mx-auto my-8 px-4">
         <div className="mb-4">
           <input
             type="text"
             placeholder="Search..."
-            className="w-full p-2 border rounded-md"
+            className="w-full p-2 border rounded-md shadow-sm"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {filteredProviders.map((item) => (
             <div
               key={item._id}
-              className="relative bg-white border shadow-md rounded-md p-4 transition-all duration-300"
+              className="relative bg-white border shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300"
             >
-              <Link
-                to={`/user/view/${item._id}`}
-                className="text-lg font-semibold block hover:text-blue-500"
-              >
-                Name: {item.firstName || ""}
-              </Link>
-              <p className="text-gray-600">Service: {item.service || ""}</p>
-              <div className="flex justify-end">
+              <div className="text-lg font-semibold mb-2">Name: {item.firstName || ""}</div>
+              <p className="text-gray-600 mb-4">Service: {item.service || ""}</p>
+              <div className="flex justify-between items-center">
                 <button
-                  className="text-white p-2 rounded-full bg-blue-500 mr-2"
+                  className="text-white p-2 rounded-full bg-blue-500 hover:bg-blue-600 transition-colors duration-300"
                   onClick={(e) => {
                     toggleIcon(item._id);
                     handleAdd(e, item._id);
@@ -107,18 +117,24 @@ const Services = () => {
                   <img
                     src={activeIcons[item._id] ? favIconActive : favIcon}
                     alt="Favorite Icon"
-                    className="w-full h-auto max-h-6 max-h-xs"
+                    className="w-6 h-6"
                   />
                 </button>
-                <button className="text-white p-2 rounded-full bg-green-500">
-                  <Link to={`/user/userfeedback/${item._id}`}>
+                <button
+                  className="text-white p-2 rounded-full bg-green-500 hover:bg-green-600 transition-colors duration-300"
+                  onClick={(e) => handleRequest(e, item._id)}
+                >
+                  Request
+                </button>
+                <Link to={`/user/userfeedback/${item._id}`}>
+                  <button className="text-white p-2 rounded-full bg-green-500 hover:bg-green-600 transition-colors duration-300">
                     <img
                       src={feedback}
                       alt="Feedback Icon"
-                      className="w-full h-auto max-h-6 max-h-xs"
+                      className="w-6 h-6"
                     />
-                  </Link>
-                </button>
+                  </button>
+                </Link>
               </div>
             </div>
           ))}

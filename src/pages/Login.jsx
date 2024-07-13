@@ -39,10 +39,12 @@ const Login = () => {
           localStorage.setItem('user', JSON.stringify(res.data.userData));
 
           // Redirect based on user role
-          if (!res.data.userData.isAdmin) {
+          if (res.data.userData.isAdmin && !res.data.userData.provider) {
+            navigate('/admin');
+          } else if(!res.data.userData.provider) {
             navigate('/home');
-          } else {
-            navigate('/transport');
+          }else if(res.data.userData.provider){
+            navigate('/providerhome')
           }
         }
       })

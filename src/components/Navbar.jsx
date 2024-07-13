@@ -3,7 +3,8 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link, useNavigate } from 'react-router-dom';
 import img from '../images/icons/user.png';
-import { getNotification } from '../apis/Api'; // Import the API function to fetch notifications
+import logo from '../images/AfnaiHo.png';
+import { getNotificationApi } from '../apis/Api';
 
 const navigation = [
   { name: 'Home', href: '/home', current: true },
@@ -23,9 +24,12 @@ export default function Example() {
   }, []);
 
   const fetchNotificationsCount = async () => {
+    const storedUserData = localStorage.getItem('user');
+    const parsedUserData = JSON.parse(storedUserData);
+    const id = parsedUserData._id;
     try {
-      const response = await getNotification(); // Fetch notifications
-      const count = response.data.notification.length; // Calculate notification count
+      const response = await getNotificationApi(id); // Fetch notifications
+      const count = response.data.notifications.length; // Calculate notification count
       setNotificationCount(count); // Update notification count state
     } catch (error) {
       console.error('Error fetching notifications:', error.message);
@@ -43,7 +47,7 @@ export default function Example() {
   };
 
   return (
-    <Disclosure as="nav" className="bg-gray-400">
+    <Disclosure as="nav" className=" bg-white">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -60,6 +64,9 @@ export default function Example() {
                 </Disclosure.Button>
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                <Link to="/home" className="flex-shrink-0">
+                  <img className="h-12 w-auto" src={logo} alt="Your Logo" />
+                </Link>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
@@ -67,7 +74,7 @@ export default function Example() {
                         key={item.name}
                         to={item.href}
                         className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                          item.current ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-700 hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
                         )}
                         aria-current={item.current ? 'page' : undefined}
