@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import ProviderNavbar from '../../components/ProviderNavbar';
-import { getSingleProviderApi, getSingleUserApi, updateProfileApi } from '../../apis/Api';
+import { getSingleProviderApi, updateProfileApi } from '../../apis/Api';
 
 
 const UpdateProviderProfile = () => {
@@ -24,7 +24,7 @@ const UpdateProviderProfile = () => {
       const storedUserData = localStorage.getItem('user');
       const parsedUserData = JSON.parse(storedUserData);
       const userId = parsedUserData._id;
-      const response = await getSingleUserApi(userId);
+      const response = await getSingleProviderApi(userId);
       setUserData({
         firstName: response.data.user.firstName,
         lastName: response.data.user.lastName,

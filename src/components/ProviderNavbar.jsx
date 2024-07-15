@@ -17,7 +17,7 @@ const ProviderNavbar = () => {
     <nav className="bg-blue-600 p-4">
       <div className="container mx-auto flex justify-between items-center">
         <div>
-          <Link to="/">
+          <Link to="/providerHome">
             <img src={logo} alt="Afnai Ho Logo" className=" h-16" />
           </Link>
         </div>

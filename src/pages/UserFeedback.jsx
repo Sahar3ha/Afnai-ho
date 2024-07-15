@@ -13,7 +13,7 @@ const UserFeedbackPage = () => {
     getSingleProviderApi(id)
       .then((res) => {
         console.log(res.data);
-        setProvider(res.data.provider);
+        setProvider(res.data.user);
       })
       .catch((error) => {
         console.error('Error fetching provider data:', error.message);

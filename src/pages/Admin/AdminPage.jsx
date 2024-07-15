@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getFeedbackApi, getUserList, getServiceProvidersApi } from '../../apis/Api';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const AdminPage = () => {
   const [activeSection, setActiveSection] = useState('feedbacks');
@@ -63,7 +64,8 @@ const AdminPage = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/login'); 
+    navigate('/login');
+    toast.success('Logged out successfully');
   };
 
   const Menus = [
@@ -79,15 +81,15 @@ const AdminPage = () => {
           <div>
             <h2 className="text-2xl font-bold mb-4">Feedbacks</h2>
             {loading ? (
-              <p>Loading...</p>
+              <div className="text-center">Loading...</div>
             ) : error ? (
-              <p>Error: {error}</p>
+              <div className="text-center text-red-600">Error: {error}</div>
             ) : reviews.length === 0 ? (
-              <p className="text-gray-600">No feedbacks available.</p>
+              <div className="text-center text-gray-600">No feedbacks available.</div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {reviews.map((feedback) => (
-                  <div key={feedback._id} className="bg-white p-6 rounded-md shadow-md">
+                  <div key={feedback._id} className="bg-white p-6 rounded-md shadow-md hover:shadow-lg transition-shadow">
                     <p className="text-gray-800 font-semibold">{feedback.feedback}</p>
                     <p className="text-gray-600 text-sm mt-2">Provider: {feedback.providerId.firstName}</p>
                   </div>
@@ -101,20 +103,29 @@ const AdminPage = () => {
           <div>
             <h2 className="text-2xl font-bold mb-4">User List</h2>
             {loading ? (
-              <p>Loading...</p>
+              <div className="text-center">Loading...</div>
             ) : error ? (
-              <p>Error: {error}</p>
+              <div className="text-center text-red-600">Error: {error}</div>
             ) : users.length === 0 ? (
-              <p className="text-gray-600">No users available.</p>
+              <div className="text-center text-gray-600">No users available.</div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {users.map((user) => (
-                  <div key={user._id} className="bg-white p-6 rounded-md shadow-md">
-                    <p className="text-gray-800 font-semibold">{user.firstName} {user.lastName}</p>
-                    <p className="text-gray-600 text-sm">{user.email}</p>
-                    {/* Add more user details as needed */}
-                  </div>
-                ))}
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white">
+                  <thead>
+                    <tr>
+                      <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-gray-600 uppercase">Name</th>
+                      <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-gray-600 uppercase">Email</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map((user) => (
+                      <tr key={user._id} className="hover:bg-gray-100">
+                        <td className="px-6 py-4 border-b border-gray-300">{user.firstName} {user.lastName}</td>
+                        <td className="px-6 py-4 border-b border-gray-300">{user.email}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>
@@ -124,20 +135,31 @@ const AdminPage = () => {
           <div>
             <h2 className="text-2xl font-bold mb-4">Provider List</h2>
             {loading ? (
-              <p>Loading...</p>
+              <div className="text-center">Loading...</div>
             ) : error ? (
-              <p>Error: {error}</p>
+              <div className="text-center text-red-600">Error: {error}</div>
             ) : providers.length === 0 ? (
-              <p className="text-gray-600">No providers available.</p>
+              <div className="text-center text-gray-600">No providers available.</div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {providers.map((provider) => (
-                  <div key={provider._id} className="bg-white p-6 rounded-md shadow-md">
-                    <p className="text-gray-800 font-semibold">{provider.firstName} {provider.lastName}</p>
-                    <p className="text-gray-600 text-sm">{provider.email}</p>
-                    {/* Add more provider details as needed */}
-                  </div>
-                ))}
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white">
+                  <thead>
+                    <tr>
+                      <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-gray-600 uppercase">Name</th>
+                      <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-gray-600 uppercase">Email</th>
+                      <th className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-gray-600 uppercase">Service</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {providers.map((provider) => (
+                      <tr key={provider._id} className="hover:bg-gray-100">
+                        <td className="px-6 py-4 border-b border-gray-300">{provider.firstName} {provider.lastName}</td>
+                        <td className="px-6 py-4 border-b border-gray-300">{provider.email}</td>
+                        <td className="px-6 py-4 border-b border-gray-300">{provider.service}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>
@@ -148,30 +170,28 @@ const AdminPage = () => {
   };
 
   return (
-    <div className="flex">
-      <div className="w-72 duration-200 h-screen pt-8 p-5 bg-gray-900 relative">
-        <div className="flex gap-x-4 items-center">
-          <h1 className="text-white origin-left font-medium text-xl duration-200">Admin Panel</h1>
-        </div>
-        <ul className="pt-6">
+    <div className="flex min-h-screen bg-gray-100">
+      <div className="w-72 h-screen bg-gray-900 text-white p-5">
+        <h1 className="text-2xl font-bold mb-6">Admin Panel</h1>
+        <ul>
           {Menus.map((menu, index) => (
             <li
               key={index}
               onClick={() => handleMenuClick(menu)}
-              className={`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-gray-400 rounded-md ${menu.gap ? 'mt-9' : 'mt-2'}`}
+              className={`p-4 hover:bg-gray-700 cursor-pointer ${activeSection === menu.src.toLowerCase() ? 'bg-gray-700' : ''}`}
             >
-              <span className="origin-left duration-200">{menu.title}</span>
+              {menu.title}
             </li>
           ))}
           <li
             onClick={handleLogout}
-            className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-gray-400 rounded-md mt-2"
+            className="p-4 hover:bg-gray-700 cursor-pointer mt-2"
           >
-            <span className="origin-left duration-200">Logout</span>
+            Logout
           </li>
         </ul>
       </div>
-      <div className="flex flex-col justify-center items-center w-full p-8 bg-gray-100">
+      <div className="flex-grow p-8">
         {renderContent()}
       </div>
     </div>
