@@ -26,6 +26,8 @@ export const createProviderApi = (data) => Api.post('/api/provider/register',dat
 export const createFavourtieApi = (data) => Api.post('/api/users/create_favourite',data)
 
 export const getServiceProvidersApi = (data)=> Api.get('/api/provider/get_providers',data)
+export const getTopServiceProvidersApi = (data)=> Api.get('/api/provider/get_topProviders',data)
+
 export const getSingleProviderApi = (id)=> Api.get(`/api/provider/get_provider/${id}`)
 export const createRequestApi = (data)=> Api.post('/api/users/create_request',data)
 export const getFavouriteApi = (id)=> Api.get(`api/users/get_favourite/${id}`)
@@ -40,7 +42,11 @@ export const updateProfileApi = (id,data)=>Api.put(`/api/users/updateProfile/${i
 export const createNotificationApi = (data) => Api.post('/api/provider/create_notification', data, config);
 export const getNotificationApi = (id) => Api.get(`/api/users/get_notification/${id}`);
 export const deleteNotificationApi = (id)=> Api.delete(`api/users/delete_notifications/${id}`)
+export const updateUserCoordinatesApi = (id,data)=>Api.put(`/api/users/updateCoordinates/${id}`,data)
+export const getUserCoordinatesApi = (id) => Api.get(`/api/users/getCoordinates/${id}`);
+export const cancelRequestApi = (id)=> Api.delete(`api/users/cancelRequest/${id}`)
 
+export const completeRequestApi = (id,data)=>Api.post(`/api/users/complete/${id}`,data)
 export const getUserList = (data)=> Api.get('/api/users/getAllUsers',data)
 
 

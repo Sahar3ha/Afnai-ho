@@ -1,13 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
+import ReactDOM from 'react-dom';
 import App from './App';
+// index.js or App.js
+import './index.css';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+
+// Include Khalti Checkout script dynamically
+const script = document.createElement('script');
+script.src = 'https://khalti.com/static/khalti-checkout.js';
+script.async = true;
+document.body.appendChild(script);
+
+ReactDOM.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
-
-

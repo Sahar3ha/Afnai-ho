@@ -3,14 +3,14 @@ import { toast } from 'react-toastify';
 import ProviderNavbar from '../../components/ProviderNavbar';
 import { getSingleProviderApi, updateProfileApi } from '../../apis/Api';
 
-
 const UpdateProviderProfile = () => {
   const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    price: ''
   });
 
   const [loading, setLoading] = useState(false);
@@ -30,7 +30,8 @@ const UpdateProviderProfile = () => {
         lastName: response.data.user.lastName,
         email: response.data.user.email,
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        price: response.data.user.price || ''
       });
     } catch (error) {
       toast.error('Error fetching user data');
@@ -62,6 +63,7 @@ const UpdateProviderProfile = () => {
         lastName: userData.lastName,
         email: userData.email,
         password: userData.password,
+        price: userData.price
       };
       const response = await updateProfileApi(userId, updateData);
       toast.success(response.data.message);
@@ -75,7 +77,7 @@ const UpdateProviderProfile = () => {
 
   return (
     <>
-    <ProviderNavbar/>
+      <ProviderNavbar />
       <div className="bg-gray-100 min-h-screen p-8">
         <div className="max-w-4xl mx-auto bg-white p-6 rounded-md shadow-md">
           <h2 className="text-3xl font-semibold mb-6">Update Profile</h2>
@@ -131,6 +133,17 @@ const UpdateProviderProfile = () => {
                 value={userData.confirmPassword}
                 onChange={handleChange}
                 className="w-full p-2 border rounded-md"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Set Your Price</label>
+              <input
+                type="number"
+                name="price"
+                value={userData.price}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-md"
+                required
               />
             </div>
             <div className="flex justify-end">

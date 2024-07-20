@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import plumber from '../images/plumber.jpg';
 import electrician from '../images/electrician.jpg';
 import homepage from '../images/homepage.jpg';
@@ -10,16 +10,78 @@ import Navbar from '../components/Navbar';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
-  return (
-    <div className="font-sans bg-gray-50 text-gray-800">
-      <Navbar />
+  const [showLocationAlert, setShowLocationAlert] = useState(false);
+  const [coordinates, setCoordinates] = useState(null);
 
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCoordinates({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+          setShowLocationAlert(false);
+        },
+        (error) => {
+          console.error('Error fetching location:', error);
+          setShowLocationAlert(true);
+        }
+      );
+    } else {
+      setShowLocationAlert(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (coordinates) {
+      console.log("location: ", coordinates);
+    }
+  }, [coordinates]);
+
+  const handleEnableLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCoordinates({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+          setShowLocationAlert(false);
+        },
+        (error) => {
+          console.error('Error fetching location:', error);
+          setShowLocationAlert(true);
+        }
+      );
+    } else {
+      alert('Geolocation is not supported by this browser.');
+    }
+  };
+
+  return (
+    <div className="font-sans bg-gray-50 text-gray-800 relative">
+      <Navbar />
+      {showLocationAlert && (
+        <div className="fixed top-4 right-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md shadow-lg z-50">
+          <p className="font-bold">Enable Location Services</p>
+          <p>We need your location to provide better services.</p>
+          <button
+            onClick={handleEnableLocation}
+            className="mt-2 bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 transition duration-300"
+          >
+            Enable Location
+          </button>
+        </div>
+      )}
       {/* Hero section */}
-      <section className="relative bg-gray-100 py-28" style={{ backgroundImage: `url(${homepage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="container mx-auto text-center bg-opacity-50 bg-gray-900 py-16 rounded-lg">
-          <h1 className="text-4xl font-bold mb-8 text-white">Find Trusted Local Services</h1>
-          <p className="text-lg text-gray-200 mb-8">Discover skilled professionals for all your home service needs</p>
-          <Link to="/services" className="inline-block bg-blue-500 hover:bg-blue-600 text-white py-3 px-8 rounded-lg font-semibold transition duration-300">Get Started</Link>
+      <section className="relative bg-gray-100" style={{ backgroundImage: `url(${homepage})`, backgroundSize: 'cover', backgroundPosition: 'center', height: '600px' }}>
+        <div className="absolute inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+          <div className="text-center text-white p-8">
+            <h1 className="text-6xl font-bold mb-8">Find Trusted Local Services</h1>
+            <p className="text-2xl mb-8">Discover skilled professionals for all your home service needs</p>
+            <Link to="/services" className="inline-block bg-blue-500 hover:bg-yellow-600 text-white py-3 px-8 rounded-lg font-semibold transition duration-300">Get Started</Link>
+          </div>
         </div>
       </section>
 
@@ -41,7 +103,7 @@ const Home = () => {
       </section>
 
       {/* Services section */}
-      <section className="bg-gray-50 py-20">
+      <section className="bg-gray-100 py-20">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Our Services</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -53,7 +115,7 @@ const Home = () => {
               { image: gardener, title: "Gardener Services", description: "Skilled gardening services to maintain and enhance your garden." },
               { image: cleaner, title: "House Cleaning Services", description: "Reliable house cleaning services for a spotless home." }
             ].map((service, index) => (
-              <div key={index} className="service flex border border-gray-200 rounded-lg p-6 bg-white shadow-lg">
+              <div key={index} className="service flex border border-gray-300 rounded-lg p-6 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div className="service-image flex-none mr-6">
                   <img src={service.image} alt={service.title} className="w-40 h-auto rounded-lg" />
                 </div>
