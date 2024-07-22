@@ -1,11 +1,31 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ProviderNavbar from '../../components/ProviderNavbar';
+import { toast } from 'react-toastify';
+import { deleteUserApi } from '../../apis/Api';
 
 const ProviderProfile = () => {
   const storedUserData = localStorage.getItem('user');
   const parsedUserData = JSON.parse(storedUserData);
-  const { firstName, lastName, email } = parsedUserData;
+  const { firstName, lastName, email, _id } = parsedUserData;
+  const navigate = useNavigate();
+
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await deleteUserApi(_id); // Assuming _id is the user's ID
+      if (response.data.success) {
+        toast.success('Account deleted successfully');
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        navigate('/register'); // Redirect to the registration page or any other appropriate page
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error('Error deleting account');
+      console.error(error.message);
+    }
+  };
 
   return (
     <>
@@ -29,6 +49,15 @@ const ProviderProfile = () => {
             />
             <p className="text-2xl font-semibold text-gray-700">{`${firstName} ${lastName}`}</p>
             <p className="text-lg text-gray-500">{email}</p>
+          </div>
+
+          <div className="mt-6 text-center">
+            <button
+              onClick={handleDeleteAccount}
+              className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-600 transition duration-300"
+            >
+              Delete Account
+            </button>
           </div>
         </div>
       </div>

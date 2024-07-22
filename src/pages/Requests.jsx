@@ -48,12 +48,12 @@ const Requests = () => {
     }
   };
 
-  const handleComplete = (requestId) => {
+  const handleComplete = (requestId,price) => {
     setSelectedRequest(requestId);
-    handlePayment(requestId);
+    handlePayment(requestId,price);
   };
 
-  const handlePayment = (requestId) => {
+  const handlePayment = (requestId,price) => {
     const config = {
       publicKey: 'test_public_key_a2d80d14c47d4cd08b7af9965ec4f477',
       productIdentity: requestId,
@@ -77,9 +77,8 @@ const Requests = () => {
       },
       paymentPreference: ['KHALTI']
     };
-
     const checkout = new KhaltiCheckout(config);
-    checkout.show({ amount: 1000 });
+    checkout.show({ amount:price  });
   };
 
   const submitRating = async () => {
@@ -151,7 +150,7 @@ const Requests = () => {
                     {!request.completed ? (
                       <div>
                         <button
-                          onClick={() => handleComplete(request._id)}
+                          onClick={() => handleComplete(request._id,request.price)}
                           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300 mr-2"
                         >
                           Complete

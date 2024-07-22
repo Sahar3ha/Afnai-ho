@@ -45,6 +45,7 @@ export const deleteNotificationApi = (id)=> Api.delete(`api/users/delete_notific
 export const updateUserCoordinatesApi = (id,data)=>Api.put(`/api/users/updateCoordinates/${id}`,data)
 export const getUserCoordinatesApi = (id) => Api.get(`/api/users/getCoordinates/${id}`);
 export const cancelRequestApi = (id)=> Api.delete(`api/users/cancelRequest/${id}`)
+export const deleteUserApi = (id)=> Api.delete(`api/users/deleteUser/${id}`)
 
 export const completeRequestApi = (id,data)=>Api.post(`/api/users/complete/${id}`,data)
 export const getUserList = (data)=> Api.get('/api/users/getAllUsers',data)
